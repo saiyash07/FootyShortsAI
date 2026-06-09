@@ -179,3 +179,26 @@ If you want to access the dashboard on a domain name via HTTPS:
    sudo systemctl restart nginx
    sudo certbot --nginx -d yourdomain.com
    ```
+
+---
+
+## Render Deployment Instructions
+
+Render allows you to deploy the application easily using the pre-configured [render.yaml](file:///Users/saiyashpoojari/Desktop/YT%20SHORTS%20AUTOMATION/render.yaml) file.
+
+### Step 1: Deploy on Render
+1. Go to the [Render Dashboard](https://dashboard.render.com/) and click **New** -> **Blueprints**.
+2. Connect your GitHub repository `FootyShortsAI`.
+3. Render will read the `render.yaml` configuration and prepare the setup.
+
+### Step 2: Configure Environment Variables
+In the Render blueprint configuration screen, add the following environment variables:
+* `GEMINI_API_KEY`: Your Gemini API Key.
+* `GOOGLE_DRIVE_FOLDER_ID`: Your Google Drive watched folder ID.
+* `GOOGLE_CLIENT_SECRETS_JSON`: The complete text content of your `credentials.json` file.
+* `GOOGLE_DRIVE_TOKEN_JSON`: The complete text content of your `drive_token.json` file (generated locally after your first-time Drive authentication).
+* `GOOGLE_YOUTUBE_TOKEN_JSON`: The complete text content of your `youtube_token.json` file (generated locally after your first-time YouTube authentication).
+
+### Step 3: Launch
+Click **Deploy**! Render will build the container, mount a persistent 1GB disk for your SQLite database, load your credentials securely from the environment variables, and launch the dashboard.
+
