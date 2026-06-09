@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: footyshorts_backend
+    ports:
+      - "${PORT:-8000}:8000"
+    volumes:
+      - ./backend/app/temp:/app/backend/app/temp
+      - ./automation.db:/app/automation.db
+      - ./credentials.json:/app/credentials.json
+      - ./token.json:/app/token.json
+      - ./.env:/app/.env
+    restart: unless-stopped
+    env_file:
+      - .env
