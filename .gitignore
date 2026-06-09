@@ -1,0 +1,24 @@
+# Environments and Secrets
+.env
+credentials.json
+token.json
+drive_token.json
+youtube_token.json
+
+# Databases
+*.db
+*.db-journal
+
+# Python Virtual Environments & Caches
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local Temporary files & Downloads
+backend/app/temp/
+backend/app/temp/*
+.DS_Store
