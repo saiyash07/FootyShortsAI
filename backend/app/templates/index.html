@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Shorts Automation Dashboard</title>
+    <!-- Outfit Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <header class="header glass">
+            <div class="logo">
+                <span class="logo-icon">⚽</span>
+                <h1>FootyShorts <span>AI</span></h1>
+            </div>
+            <p class="tagline">Production-Ready AI Football Shorts Automation</p>
+            <div class="actions">
+                <button id="btnScanDrive" class="btn btn-primary">
+                    <span class="btn-icon">🔍</span> Scan Drive
+                </button>
+                <button id="btnGenerateMetadata" class="btn btn-secondary">
+                    <span class="btn-icon">✨</span> Generate AI Metadata
+                </button>
+                <button id="btnUploadVideos" class="btn btn-accent">
+                    <span class="btn-icon">🚀</span> Upload to YouTube
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-card glass total">
+                    <div class="stat-info">
+                        <h3>Total Videos</h3>
+                        <p id="statTotal" class="stat-number">0</p>
+                    </div>
+                </div>
+                <div class="stat-card glass pending">
+                    <div class="stat-info">
+                        <h3>Pending</h3>
+                        <p id="statPending" class="stat-number">0</p>
+                    </div>
+                </div>
+                <div class="stat-card glass metadata">
+                    <div class="stat-info">
+                        <h3>AI Generated</h3>
+                        <p id="statMetadata" class="stat-number">0</p>
+                    </div>
+                </div>
+                <div class="stat-card glass uploading">
+                    <div class="stat-info">
+                        <h3>Uploading</h3>
+                        <p id="statUploading" class="stat-number">0</p>
+                    </div>
+                </div>
+                <div class="stat-card glass uploaded">
+                    <div class="stat-info">
+                        <h3>Uploaded</h3>
+                        <p id="statUploaded" class="stat-number">0</p>
+                    </div>
+                </div>
+                <div class="stat-card glass failed">
+                    <div class="stat-info">
+                        <h3>Failed</h3>
+                        <p id="statFailed" class="stat-number">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Management -->
+            <section class="video-section glass">
+                <div class="section-header">
+                    <h2>Upload Queue & History</h2>
+                    <div class="filters">
+                        <input type="text" id="searchBar" placeholder="Search filename or title..." class="search-input">
+                        <select id="statusFilter" class="select-filter">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="metadata_generated">AI Generated</option>
+                            <option value="uploading">Uploading</option>
+                            <option value="uploaded">Uploaded</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="video-table">
+                        <thead>
+                            <tr>
+                                <th>Filename</th>
+                                <th>AI Title</th>
+                                <th>Status</th>
+                                <th>Attempts</th>
+                                <th>Created</th>
+                                <th>Uploaded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="videoTableBody">
+                            <!-- Populated by JS -->
+                            <tr>
+                                <td colspan="7" class="loading-state">Loading videos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Video Detail Modal (Native dialog with closedby attribute for light-dismiss) -->
+    <dialog id="videoModal" closedby="any" aria-labelledby="modalTitle" class="glass-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="modalTitle">Video Details</h2>
+                <button onclick="document.getElementById('videoModal').close()" class="btn-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div class="meta-field">
+                    <label>Filename</label>
+                    <p id="modalFilename" class="field-value filename-value"></p>
+                </div>
+                <div class="meta-field">
+                    <label>Drive File ID</label>
+                    <p id="modalDriveId" class="field-value code-value"></p>
+                </div>
+                <div class="meta-field">
+                    <label>Status</label>
+                    <span id="modalStatusBadge" class="badge"></span>
+                </div>
+                <div class="meta-field">
+                    <label>Generated Title</label>
+                    <p id="modalTitleText" class="field-value title-value"></p>
+                </div>
+                <div class="meta-field">
+                    <label>Generated Description</label>
+                    <p id="modalDescriptionText" class="field-value desc-value"></p>
+                </div>
+                <div class="meta-field">
+                    <label>Hashtags</label>
+                    <p id="modalHashtagsText" class="field-value hashtag-value"></p>
+                </div>
+                <div class="meta-field">
+                    <label>YouTube Video ID</label>
+                    <p id="modalYoutubeId" class="field-value code-value"></p>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button id="modalBtnUpload" class="btn btn-accent">🚀 Upload to YT</button>
+                <button onclick="document.getElementById('videoModal').close()" class="btn btn-secondary">Close</button>
+            </footer>
+        </div>
+    </dialog>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
